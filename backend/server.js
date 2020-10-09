@@ -124,6 +124,52 @@ app.delete("/api/item/:id", (req, res, next) => {
     });
 })
 
+//comments endpoints
+
+app.get("/api/comments/:id_image", (req, res, next) => {
+    var sql = "select * from comments where id_image = ?"
+    var params = [req.params.id_image]
+    db.all(sql, params, (err, rows) => {
+        if (err) {
+          res.status(400).json({"error":err.message});
+          return;
+        }
+        res.json({
+            "message":"success",
+            "data":rows
+        })
+      });
+});
+
+app.post("/api/comment/:id_image", (req, res, next) => {
+    var errors=[]
+    if (!req.body.comment){
+        errors.push("No comment specified");
+    }
+    if (errors.length){
+        res.status(400).json({"error":errors.join(",")});
+        return;
+    }
+    var data = {
+        comment: req.body.comment,
+        id_image: req.params.id_image
+    }
+    var sql ='INSERT INTO comments (comment, id_image) VALUES (?,?)'
+    var params =[data.comment, req.params.id_image]
+    db.run(sql, params, function (err, result) {
+        if (err){
+            res.status(400).json({"error": err.message})
+            console.log(err.message)
+            return;
+        }
+        res.json({
+            "message": "success",
+            "data": data,
+            "id" : this.lastID
+        })
+    });
+})
+
 // Default response for any other request
 app.use(function(req, res){
     res.status(404);

@@ -10,7 +10,7 @@ p {
 
 .Header {
   min-height: 80vh;
-  background:  darkorange url(./CSS/images/hopper.jpg) no-repeat;
+  background:  darkorange url(./images/hopper.jpeg) no-repeat;
   background-size: 100%;
   display: flex;
   flex-direction: column;
