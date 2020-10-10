@@ -30,19 +30,21 @@ let db = new sqlite3.Database(DBSOURCE, (err) => {
                 db.run(insert, ["Gas","The subject was a composite of several gas stations Hopper had visited. According to Hopper's wife, the gas station motif was something he had wanted to paint for a long time. Hopper struggled with the painting. He had begun to produce new paintings at a slower rate than before, and had trouble finding suitable gas stations to paint. Hopper wanted to paint a station with the lights lit above the pumps, but the stations in his area only turned the lights on when it was pitch dark outside, to save energy",5,"https://loff.it/wp-content/uploads/2020/01/loffit-edward-hopper-04.jpg"])
                 
                	db.run(`CREATE TABLE comments (
-            	id INTEGER PRIMARY KEY AUTOINCREMENT,
-            	id_image integer, 
-            	comment text
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                name text, 
+            	comment text,
+                id_image integer
             	)`,
         		(err) => {
             		if (err) {
                 		// Table already created
             		}else{
                 		// Table just created, creating some rows
-                		var insert = 'INSERT INTO comments (id_image, comment) VALUES (?,?)'
-                		db.run(insert, [1,"beautiful"])
+                		/*var insert = 'INSERT INTO comments (name, id_image, comment) VALUES (?,?,?)'
+                		db.run(insert, ["Ana,"1,"beautiful"])
                 		db.run(insert, [2,"awesome"])
-                		db.run(insert, [1,"awesome"])
+                        db.run(insert, [1,"awesome"])
+                        */
             		}
         		});  
             }

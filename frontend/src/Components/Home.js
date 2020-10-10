@@ -4,7 +4,7 @@ import axiosInstance from "../axiosApi";
 
 const Home = () => {
     const [data, setData] = useState([]);
-    
+
     useEffect(() => {
         resetItems();
     }, []);

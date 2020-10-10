@@ -8,7 +8,8 @@ import axiosInstance from "../axiosApi";
 const Details = (props) => {
 	
 	const [comments, setComments] = useState([]);
-	const [newComment, setNewComment] = useState("");
+    const [newComment, setNewComment] = useState("");
+    const [name, setName] = useState("");
 
     useEffect(() => {
     	getComments();
@@ -20,14 +21,25 @@ const Details = (props) => {
     ).catch (error => {
         throw error;
     })}; 
-    
+   
     const onChange = e => {
-      setNewComment(e.target.value);
-  	};
-  
+        e.preventDefault();
+        if (e.target.name === "name"){
+            setName(e.target.value)
+        }
+        else{
+            setNewComment(e.target.value);
+        }
+      console.log("value: " + e.target.value);
+    };
+
     const postComment = (e) => {
-       e.preventDefault();
-       axiosInstance.post('comment/' + props.item.id, {comment: newComment})
+        e.preventDefault();
+        axiosInstance.post('comment/' + props.item.id, 
+       {
+            comment: newComment,
+            name: name
+       })
        .then(getComments)
        .catch (error => {
             throw error;
@@ -38,7 +50,6 @@ const Details = (props) => {
         props.setActive(!props.active);
     }
 
- 	console.log(newComment)
     return(
         <div className="item-details">
             <div className="background-photo">
@@ -54,19 +65,25 @@ const Details = (props) => {
             /> 
             <div>
                 <p>{props.item.description}</p>
-                <div className="comments">
-                    <h4>Comments</h4>
-                    <h4>Comentario {props.item.id}</h4>
-                    <form onSubmit={postComment}>
-                     	<label for="com">Comment:</label>
-                    	<input onChange={onChange} name="com"></input>
-                    	<button>Send</button>
+                <div className="comments-box">
+                    <h4>Join the Discussion</h4>
+                    <form className="comment-form" onSubmit={postComment}>
+                        <div className="comment-form-fiel">
+                            <label for="name"></label>
+                            <textarea onChange={onChange} name="name" placeholder="name"></textarea>
+                            <label for="comment"></label>
+                            <textarea onChange={onChange} name="comment" placeholder="comment"></textarea>
+                            <button>Post Comment</button>
+                        </div>
                     </form>
-                    <div className="">
+                    <h4>Comments</h4>
+                    <div className="comments">
             			{comments.map(comment => (
                 			comment.map(c => 
-                			<div >
-                    			<p>{c.comment}</p>
+                			<div className="comment">
+                                <p >{c.name}</p>
+                    			<p style={{marginLeft: "55px"}}>- {c.comment}</p>
+                                <hr/>
                 			</div>
                 			)
             			))}

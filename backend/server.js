@@ -151,11 +151,12 @@ app.post("/api/comment/:id_image", (req, res, next) => {
         return;
     }
     var data = {
+        name: req.body.name,
         comment: req.body.comment,
         id_image: req.params.id_image
     }
-    var sql ='INSERT INTO comments (comment, id_image) VALUES (?,?)'
-    var params =[data.comment, req.params.id_image]
+    var sql ='INSERT INTO comments (name, comment, id_image) VALUES (?,?,?)'
+    var params =[data.name, data.comment, req.params.id_image]
     db.run(sql, params, function (err, result) {
         if (err){
             res.status(400).json({"error": err.message})
