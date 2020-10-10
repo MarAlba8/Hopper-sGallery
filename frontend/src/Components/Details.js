@@ -26,11 +26,9 @@ const Details = (props) => {
         e.preventDefault();
         if (e.target.name === "name"){
             setName(e.target.value)
-        }
-        else{
+        }else{
             setNewComment(e.target.value);
         }
-      console.log("value: " + e.target.value);
     };
 
     const postComment = (e) => {
@@ -44,6 +42,8 @@ const Details = (props) => {
        .catch (error => {
             throw error;
         })
+
+        e.target.reset();
     }; 
     
     const handleClick = () => {
