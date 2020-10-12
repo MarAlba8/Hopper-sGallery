@@ -8,7 +8,7 @@ import StarRatings from 'react-star-ratings';
 const Item = (props) => {
     const [active, setActive] = useState(false);
     const [rating, setRating] = useState(0);
-    let details = <Details active={active} setActive={setActive} item={props.item} />;
+    let details = <Details active={active} setActive={setActive} item={props.item} rating={rating}/>;
 
     const changeRating = ( newRating, name ) => {
         axiosInstance.post('rating/' + props.item.id, 
@@ -26,8 +26,6 @@ const Item = (props) => {
     ).catch (error => {
         throw error;
     })};
-	
-    console.log(rating);
     
     const handleDetails = () => {
         setActive(!active);       
@@ -39,6 +37,11 @@ const Item = (props) => {
                 <div className="info">
                     <h5 id="title">{props.item.title}</h5>
                 </div>  
+                   
+                             
+            </div>
+            {active ? details : ""} 
+            <div className="start-rating">
                 <StarRatings
                     rating={rating}
                     starRatedColor="red"
@@ -47,10 +50,8 @@ const Item = (props) => {
                     name='rating'
                     starDimension="15px"
                     starSpacing="10px"
-                />    
-                             
+                /> 
             </div>
-            {active ? details : ""} 
         </div>
     );
 }

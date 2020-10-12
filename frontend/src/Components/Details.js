@@ -57,7 +57,8 @@ const Details = (props) => {
             </div>
             <h2 className="photo-title">{props.item.title}</h2>
             <StarRatings
-                starRatedColor="blue"
+                rating={props.rating}
+                starRatedColor="red"
                 numberOfStars={5}
                 name='rating'
                 starDimension="15px"
