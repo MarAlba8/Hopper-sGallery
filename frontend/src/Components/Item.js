@@ -1,6 +1,8 @@
 import React, {useState} from 'react';
 import Details from './Details';
 
+import axiosInstance from "../axiosApi";
+
 import StarRatings from 'react-star-ratings';
 
 const Item = (props) => {
@@ -9,9 +11,24 @@ const Item = (props) => {
     let details = <Details active={active} setActive={setActive} item={props.item} />;
 
     const changeRating = ( newRating, name ) => {
-        setRating(newRating);
+        axiosInstance.post('rating/' + props.item.id, 
+       {
+            rating: newRating
+       })
+       .then(getRating)
+       .catch (error => {
+            throw error;
+        })
     }
 
+	const getRating = () => {
+       axiosInstance.get('rating/' + props.item.id).then(response => setRating(response.data.data[0].rate)
+    ).catch (error => {
+        throw error;
+    })};
+	
+    console.log(rating);
+    
     const handleDetails = () => {
         setActive(!active);       
     }
@@ -24,7 +41,7 @@ const Item = (props) => {
                 </div>  
                 <StarRatings
                     rating={rating}
-                    starRatedColor="blue"
+                    starRatedColor="red"
                     changeRating={changeRating}
                     numberOfStars={5}
                     name='rating'

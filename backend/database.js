@@ -47,6 +47,27 @@ let db = new sqlite3.Database(DBSOURCE, (err) => {
                         */
             		}
         		});  
+
+                db.run(`CREATE TABLE rating (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                rate real, 
+                n_voters integer,
+                id_image integer
+                )`,
+                (err) => {
+                    if (err) {
+                        console.log("Error: " + err)
+                    }else{
+                        // Table just created, creating some rows
+                        var insert = 'INSERT INTO rating (rate, n_voters, id_image) VALUES (?,?,?)'
+                        db.run(insert, [0,0,1])
+                        db.run(insert, [0,0,2])
+                        db.run(insert, [0,0,3])
+                        db.run(insert, [0,0,4])
+                        db.run(insert, [0,0,5])
+                        db.run(insert, [0,0,6])
+                    }
+                });  
             }
         });  
     }

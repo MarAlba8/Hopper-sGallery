@@ -23,7 +23,6 @@ app.get("/", (req, res, next) => {
 
 //API endpoints
 app.get("/api/items", (req, res, next) => {
-    console.log("inside get")
     var sql = "select * from item"
     var params = []
     db.all(sql, params, (err, rows) => {
@@ -168,6 +167,75 @@ app.post("/api/comment/:id_image", (req, res, next) => {
             "data": data,
             "id" : this.lastID
         })
+    });
+})
+
+
+//rating endpoints
+app.get("/api/rating/:id_image", (req, res, next) => {
+    var sql = "select * from rating where id_image = ?"
+    var params = [req.params.id_image]
+    db.all(sql, params, (err, rows) => {
+        if (err) {
+          res.status(400).json({"error":err.message});
+          return;
+        }
+        res.json({
+            "message":"success",
+            "data":rows
+        })
+      });
+});
+
+app.post("/api/rating/:id_image", (req, res, next) => {
+    var errors=[]
+    if (!req.body.rating){
+        errors.push("No rating specified");
+    }
+    if (errors.length){
+        res.status(400).json({"error":errors.join(",")});
+        return;
+    }
+
+    var sql = "SELECT rate, n_voters FROM rating WHERE id_image = ?"
+    var params = [req.params.id_image]
+    db.all(sql, params, (err, row) => {
+        if (err) {
+          res.status(400).json({"error":err.message});
+          return;
+        }
+
+        rate = row[0].rate;
+        nVoters = row[0].n_voters;
+
+        var newRate = ((rate*nVoters) + req.body.rating)/(nVoters+1);
+        var newVoters = nVoters +1;
+
+        var data = {
+            rate: newRate,
+            newVoters: newVoters
+        }
+
+        db.run(
+            `UPDATE rating set 
+               rate = COALESCE(?,rate), 
+               n_voters = COALESCE(?,n_voters),
+               id_image = COALESCE(?,id_image)
+               WHERE id_image = ?`,
+            [data.rate, data.newVoters, req.params.id_image, req.params.id_image],
+            function (err, result) {
+                if (err){
+                    console.log("Error updating: " + err)
+                    res.status(400).json({"error": res.message})
+                    return;
+                }
+                res.json({
+                    message: "success",
+                    data: Math.round(data.rate),
+                    changes: this.changes
+                })
+            }
+        );
     });
 })
 
